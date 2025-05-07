@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>狼人杀卧底助手</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { 
+            font-family: sans-serif; 
+            margin: 20px; 
+            background-color: #f4f4f4; 
+            color: #333; 
+            line-height: 1.6;
+        }
+        .section { 
+            background-color: #fff; 
+            margin-bottom: 25px; 
+            padding: 20px; 
+            border: 1px solid #ddd; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+        }
+        h1 {
+            color: #007bff; 
+            text-align: center; 
+            margin-bottom: 30px;
+        }
+        h2 { 
+            color: #333; 
+            border-bottom: 2px solid #007bff; 
+            padding-bottom: 8px; 
+            margin-top: 0; 
+            margin-bottom: 20px; 
+        }
+        h3 {
+            color: #444;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        h4 {
+            color: #555;
+            margin-top: 15px;
+            margin-bottom: 8px;
+        }
+        label { 
+            display: block; 
+            margin-top: 15px; 
+            margin-bottom: 5px; 
+            font-weight: bold; 
+            color: #555;
+        }
+        input[type="text"], 
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%; 
+            padding: 10px; 
+            margin-bottom: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            box-sizing: border-box; 
+            font-size: 1em;
+        }
+        input[type="checkbox"] {
+            width: auto; 
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        textarea {
+            min-height: 80px; 
+            resize: vertical; 
+        }
+        button {
+            background-color: #007bff; 
+            color: white; 
+            cursor: pointer; 
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 18px; 
+            font-size: 1em;
+            margin-right: 8px; 
+            margin-top: 5px; 
+            margin-bottom: 5px; 
+        }
+        button:hover { 
+            background-color: #0056b3; 
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px; 
+            align-items: end; 
+        }
+        .form-grid label {
+            margin-top: 5px; 
+        }
+        .full-width {
+             grid-column: 1 / -1;
+        }
+        label.checkbox-label {
+            display: flex; 
+            align-items: center;
+            font-weight: normal;
+            margin-top: 10px; 
+        }
+        .list-display ul {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+        .list-display ul li {
+            margin-bottom: 8px; 
+            padding: 5px;
+            background-color: #f9f9f9;
+            border-radius: 3px;
+        }
+        .list-display ul li code {
+            background-color: #e9e9e9;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        #playerInfoArea ul { list-style-type: none; padding-left: 0; }
+        #timerDisplay { font-size: 2.2em; font-weight: bold; margin: 20px 0; text-align: center; color: #007bff; background-color: #f8f9fa; padding: 10px; border-radius: 5px; }
+        #nightActionPrompt { padding: 15px; margin-bottom: 20px; background-color:#eef2f7; border-left: 5px solid #007bff; border-radius: 5px; min-height: 45px; display: flex; align-items: center; justify-content: center; text-align: center; font-size: 1.1em; }
+        #currentPhaseDisplay { font-size: 1.6em; margin-bottom: 20px; text-align: center; font-weight: bold; color: #28a745; }
+        .button-group button { margin-right: 8px; margin-bottom: 8px; }
+        .button-group button:last-child { margin-right: 0; }
+        .role-in-setup {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 8px;
+            background-color: #f0f0f0;
+            margin-bottom: 5px;
+            border-radius: 3px;
+        }
+        .role-in-setup button {
+            padding: 3px 8px;
+            font-size: 0.8em;
+            background-color: #dc3545; 
+        }
+    </style>
+</head>
+<body>
+
+    <h1>主持人助手</h1> <div class="section" id="wordSetup">
+        <h2>1. 设置通用词语</h2>
+        <label for="goodWord">好人阵营词语:</label>
+        <input type="text" id="goodWord" name="goodWord" placeholder="例如：苹果">
+        <label for="wolfWord">狼人阵营词语:</label>
+        <input type="text" id="wolfWord" name="wolfWord" placeholder="例如：香蕉">
+    </div>
+
+    <div class="section" id="uiDefineRoleSection">
+        <h2>2. 创建自定义角色</h2>
+        <div class="form-grid">
+            <div><label for="roleIdInput">角色ID (英文/数字，唯一):</label><input type="text" id="roleIdInput" placeholder="例如: WITCH_KING"></div>
+            <div><label for="roleNameInput">角色名称 (中文):</label><input type="text" id="roleNameInput" placeholder="例如: 白狼王"></div>
+            <div><label for="roleFactionSelect">阵营:</label><select id="roleFactionSelect"><option value="好人阵营">好人阵营</option><option value="狼人阵营">狼人阵营</option><option value="中立阵营">中立阵营</option></select></div>
+            <div><label for="roleWordSourceSelect">词语来源:</label><select id="roleWordSourceSelect"><option value="good">获取好人词语</option><option value="wolf">获取狼人词语</option><option value="none">无词语</option></select></div>
+            <div class="full-width"><label class="checkbox-label" for="roleHasNightActionCheckbox"><input type="checkbox" id="roleHasNightActionCheckbox">夜晚行动 (此角色是否常规夜晚睁眼)</label></div>
+            <div class="full-width"><label for="roleNightActionPromptTextarea">夜晚行动提示 (若勾选夜晚行动):</label><textarea id="roleNightActionPromptTextarea" placeholder="例如: 请 白狼王 睁眼..."></textarea></div>
+        </div>
+        <button id="addCustomRoleButton">添加/更新此自定义角色</button>
+        <div id="customRolesListDisplay" class="list-display" style="margin-top: 20px;"><h4>已定义的自定义角色:</h4><ul id="uiDefinedRolesList"><li><em>尚无自定义角色</em></li></ul></div>
+    </div>
+
+    <div class="section" id="uiDefineSetupSection">
+        <h2>3. 创建自定义板子</h2>
+        <div class="form-grid">
+            <div><label for="setupNameInput">板子名称:</label><input type="text" id="setupNameInput" placeholder="例如: 8人预女猎守标准局"></div>
+            <div><label for="setupPlayerCountInput">适用玩家人数 (自动计算):</label><input type="number" id="setupPlayerCountInput" min="4" placeholder="根据角色自动计算" readonly></div>
+        </div>
+        <h3>板子内角色配置:</h3>
+        <div class="form-grid">
+            <div><label for="setupRoleSelect">选择角色添加到板子:</label><select id="setupRoleSelect"><option value="">--选择一个角色--</option></select></div>
+            <div><label for="setupRoleQuantityInput">该角色数量:</label><input type="number" id="setupRoleQuantityInput" min="1" value="1"></div>
+            <div style="align-self: end;"><button id="addRoleToSetupButton">添加角色到当前板子</button></div>
+        </div>
+        <div id="currentSetupRolesDisplay" class="list-display" style="margin-top: 10px;"><h4>当前板子已添加角色 (总数: <span id="currentSetupTotalPlayers">0</span>):</h4><ul id="uiSetupRolesList"><li><em>尚未添加角色</em></li></ul></div>
+        <div class="full-width" style="margin-top: 15px;"><label for="setupNightActionOrderInput">此板子夜晚行动顺序 (逗号分隔角色中文名):</label><input type="text" id="setupNightActionOrderInput" placeholder="例如: 狼人,女巫,守卫,预言家"></div>
+        <button id="saveCustomSetupButton" style="margin-top: 15px;">保存此板子配置</button>
+        <div id="customSetupsListDisplay" class="list-display" style="margin-top: 20px;"><h4>已保存的自定义板子:</h4><ul id="uiDefinedSetupsList"><li><em>尚无自定义板子</em></li></ul></div>
+    </div>
+
+    <div class="section" id="playerSetup">
+        <h2>4. 开始游戏</h2>
+        <div><label for="selectGameSetup">选择板子配置:</label><select id="selectGameSetup"><option value="">--请先定义或选择一个板子--</option></select></div>
+        <div><label for="playerCountDisplay">玩家总人数 (根据所选板子):</label><input type="text" id="playerCountDisplay" readonly placeholder="选择板子后自动填充"></div>
+        <button id="generateRolesButton">确认板子并生成身份</button>
+    </div>
+
+    <div class="section" id="gameDisplay">
+        <h2>5. 游戏信息总览</h2>
+        <div id="playerInfoArea"><p style="text-align:center; color:#777;"><i>请先选择板子并生成身份。</i></p></div>
+    </div>
+
+    <div class="section" id="speechTimerSection">
+        <h2>6. 发言计时器</h2>
+        <div><label for="speechDuration">设定发言时长 (秒):</label><input type="number" id="speechDuration" value="60" min="10"></div>
+        <div id="timerDisplay">01:00</div>
+        <div class="button-group"><button id="startTimerButton">开始计时</button><button id="stopTimerButton">暂停计时</button><button id="resetTimerButton">重置计时</button></div>
+    </div>
+
+    <div class="section" id="phaseManagementSection">
+        <h2>7. 游戏流程控制</h2>
+        <div id="currentPhaseDisplay">当前阶段: 白天</div>
+        <div id="nightActionPrompt">点击“进入夜晚”开始夜间流程。</div>
+        <div class="button-group"><button id="enterNightButton">进入夜晚</button><button id="nextNightActionButton" style="display: none;">下一个行动</button><button id="enterDayButton" style="display: none;">进入白天</button></div>
+    </div>
+
+    <div class="section" id="voteCounterSection">
+        <h2>8. 计票器</h2>
+        <div class="form-grid">
+            <div><label for="votePlayerIdInput">输入被投票的玩家编号:</label><input type="number" id="votePlayerIdInput" min="1" placeholder="玩家编号"></div>
+            <div style="padding-bottom: 10px;"><button id="submitVoteButton">为该玩家投票</button></div>
+        </div>
+        <div style="margin-top: 15px;" class="button-group"><button id="resetVotesButton">重置所有票数</button></div>
+        <p style="font-size: 0.9em; color: #555; margin-top:15px;">玩家的当前得票数将显示在上方“游戏信息总览”区域。 </p>
+    </div>
+
+    <script src="script.js"></script> 
+    </body>
+</html>
+
