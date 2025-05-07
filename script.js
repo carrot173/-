@@ -1,5 +1,3 @@
-alert("JavaScript脚本已加载！");
-
 // --- 全局状态变量 ---
 
 let players = [];
